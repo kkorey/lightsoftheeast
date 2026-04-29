@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal Logic
     const notifyModal = document.getElementById('notify-modal');
     const openNotifyBtn = document.getElementById('open-notify-modal');
-    const closeNotifyBtn = document.querySelector('.close-modal');
+    const closeNotifyBtn = notifyModal ? notifyModal.querySelector('.close-modal') : null;
 
     if (notifyModal && openNotifyBtn && closeNotifyBtn) {
         openNotifyBtn.addEventListener('click', (e) => {
