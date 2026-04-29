@@ -22,6 +22,7 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    background-color: var(--color-bg);
 }
 
 body {
@@ -707,13 +708,16 @@ nav.scrolled {
 
 @media (max-width: 768px) {
     .gallery-grid {
-        column-count: 3;
+        column-count: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
     }
-}
-
-@media (max-width: 480px) {
-    .gallery-grid {
-        column-count: 3;
+    .gallery-item {
+        margin-bottom: 0;
+    }
+    .gallery-item .image-placeholder {
+        aspect-ratio: 1 / 1 !important;
     }
 }
 
