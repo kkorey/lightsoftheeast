@@ -357,17 +357,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!eventsContainer) return;
 
         try {
-            const config = window.googleCalendarConfig;
-            if (!config || !config.calendarId || !config.apiKey || 
-                config.calendarId === 'YOUR_GOOGLE_CALENDAR_ID' || 
-                config.apiKey === 'YOUR_GOOGLE_CALENDAR_API_KEY') {
-                console.warn('Google Calendar configuration placeholders detected. Using fallback static events.');
+            if (!window.supabase) {
+                console.warn('Supabase client not loaded. Using fallback static events.');
+                return;
+            }
+
+            // Fetch credentials dynamically from Supabase config table
+            const { data: configData, error: configError } = await window.supabase.from('config').select('*');
+            if (configError) {
+                throw configError;
+            }
+
+            const configMap = {};
+            (configData || []).forEach(row => {
+                configMap[row.key] = row.value;
+            });
+
+            const calendarId = configMap['google_calendar_id'];
+            const apiKey = configMap['google_calendar_api_key'];
+
+            if (!calendarId || !apiKey) {
+                console.warn('Google Calendar credentials not found in Supabase database. Using fallback static events.');
                 return;
             }
 
             // Fetch upcoming events from Google Calendar API v3
             const now = new Date().toISOString();
-            const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(config.calendarId)}/events?key=${config.apiKey}&timeMin=${now}&singleEvents=true&orderBy=startTime&maxResults=5`;
+            const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${now}&singleEvents=true&orderBy=startTime&maxResults=5`;
 
             const res = await fetch(url);
             if (!res.ok) {
