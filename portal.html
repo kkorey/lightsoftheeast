@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Portal | Grand Lodge</title>
+    <title>Member Portal | Lights of the East Lodge No. 33</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,8 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             display: flex;
@@ -32,6 +34,12 @@
             border-radius: 12px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            text-align: left;
         }
 
         .portal-logo {
@@ -71,10 +79,17 @@
         .form-group input {
             background-color: rgba(22, 27, 34, 0.8);
             border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 100%;
+            padding: 0.8rem 1rem;
+            color: var(--color-text);
+            border-radius: 4px;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .form-group input:focus {
             background-color: var(--color-bg-light);
+            border-color: var(--color-primary);
+            outline: none;
         }
 
         .portal-footer {
@@ -88,6 +103,8 @@
 
         .portal-footer a {
             color: var(--color-text-muted);
+            cursor: pointer;
+            text-decoration: none;
         }
 
         .portal-footer a:hover {
@@ -106,10 +123,99 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 0.9rem;
+            text-decoration: none;
         }
 
         .back-link:hover {
             color: var(--color-primary);
+        }
+
+        /* Auth Message Styles */
+        .auth-message {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .auth-message.error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .auth-message.success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #51cf66;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .auth-message.info {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: #4dabf7;
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+
+        /* Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h2 {
+            margin-bottom: 0;
+            color: var(--color-primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--color-primary);
+            color: var(--color-bg);
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .dashboard-card {
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .dashboard-card i {
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .dashboard-card p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
         }
 
         @media (max-width: 500px) {
@@ -123,31 +229,92 @@
 <body>
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
 
-    <div class="portal-container reveal active">
+    <!-- Auth Forms (Login / Signup) -->
+    <div id="auth-container" class="portal-container reveal active">
         <img src="icon.png" alt="Lodge Logo" class="portal-logo">
         <div class="portal-header">
             <h2>Member Portal</h2>
-            <p>Enter your credentials to access the lodge directory and resources.</p>
+            <p>Access the lodge directory and resources.</p>
         </div>
 
-        <form action="#" method="get"
-            onsubmit="event.preventDefault(); alert('This is a mockup. Login functionality would connect to your backend database.');">
+        <div id="auth-message" class="auth-message"></div>
+
+        <!-- Login Form -->
+        <form id="login-form">
             <div class="form-group">
-                <label for="member-id"><i class="fas fa-id-card"></i> Member ID or Email</label>
-                <input type="text" id="member-id" placeholder="Enter your ID or Email" required>
+                <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="login-email" placeholder="Enter your email" required>
             </div>
             <div class="form-group">
-                <label for="password"><i class="fas fa-key"></i> Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+                <label for="login-password"><i class="fas fa-key"></i> Password</label>
+                <input type="password" id="login-password" placeholder="Enter your password" required>
             </div>
-            <button type="submit" class="btn-primary w-100">Secure Login</button>
+            <button type="submit" class="btn-primary w-100" style="width: 100%; padding: 1rem; margin-top: 1rem;">Secure Login</button>
+            
+            <div class="portal-footer">
+                <a href="#">Forgot Password?</a>
+                <a id="show-signup">Create an Account</a>
+            </div>
         </form>
 
-        <div class="portal-footer">
-            <a href="#">Forgot Password?</a>
-            <a href="#">Request Access</a>
+        <!-- Signup Form (Hidden by default) -->
+        <form id="signup-form" style="display: none;">
+            <div class="form-group">
+                <label for="signup-email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="signup-email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-password"><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="signup-password" placeholder="Create a password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="signup-confirm-password"><i class="fas fa-lock"></i> Confirm Password</label>
+                <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required minlength="6">
+            </div>
+            <button type="submit" class="btn-primary w-100" style="width: 100%; padding: 1rem; margin-top: 1rem;">Sign Up</button>
+            
+            <div class="portal-footer">
+                <span style="color: var(--color-text-muted);">Already a member?</span>
+                <a id="show-login">Log In Here</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Dashboard (Hidden by default, shown when authenticated) -->
+    <div id="dashboard-container" class="portal-container dashboard-container reveal active" style="display: none;">
+        <div class="dashboard-header">
+            <div>
+                <h2>Welcome, Brother</h2>
+                <p style="color: var(--color-text-muted); margin-bottom: 0;" id="user-email-display">user@example.com</p>
+            </div>
+            <button id="logout-btn" class="btn-outline"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="dashboard-card">
+                <i class="fas fa-book-open"></i>
+                <h3>Lodge Directory</h3>
+                <p>Access contact information for all active lodge members.</p>
+                <button class="btn-primary" style="padding: 0.5rem 1rem;">View Directory</button>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h3>Pay Dues</h3>
+                <p>View your current standing and submit annual dues securely.</p>
+                <button class="btn-primary" style="padding: 0.5rem 1rem;">Pay Now</button>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Meeting Minutes</h3>
+                <p>Review minutes and notes from recent stated communications.</p>
+                <button class="btn-primary" style="padding: 0.5rem 1rem;">Access Archives</button>
+            </div>
         </div>
     </div>
+
+    <!-- Scripts -->
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
 </body>
 
 </html>

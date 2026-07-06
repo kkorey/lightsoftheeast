@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lights of the East</title>
+    <title>Lights of the East Lodge No. 33</title>
     <meta name="description"
-        content="Welcome to Lights of the East. Discover the history, values, and brotherhood of Freemasonry.">
+        content="Welcome to Lights of the East Lodge No. 33. Discover the history, values, and brotherhood of Freemasonry in Georgia. Dedicated to Brotherhood, Charity, and Truth since December 2025.">
+    <meta name="keywords"
+        content="Freemasonry Georgia, Masonic Lodge Near Me, Lights of the East Lodge No. 33, Georgia Masons, Freemasons Atlanta">
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts for premium typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +18,12 @@
         rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase configuration -->
+    <script src="supabase-config.js"></script>
+    <!-- Google Calendar configuration -->
+    <script src="calendar-config.js"></script>
 </head>
 
 <body>
@@ -23,7 +31,7 @@
         <div class="nav-container">
             <a href="#home" class="logo-container">
                 <img src="icon.png" alt="Lodge Logo" class="logo-img" id="nav-logo">
-                <span class="logo-text">Lights of<br>the East</span>
+                <span class="logo-text">Lights of the East<br>Lodge No. 33</span>
             </a>
             <div class="nav-links">
                 <a href="#home">Home</a>
@@ -32,6 +40,7 @@
                             class="fas fa-chevron-down" style="font-size: 0.6rem; margin-left: 3px;"></i></a>
                     <div class="dropdown-content">
                         <a href="#history">History</a>
+                        <a href="#lineage">Lineage</a>
                         <a href="#gallery">Gallery</a>
                         <a href="#leadership">Leadership</a>
                         <a href="#scholarships">Scholarships</a>
@@ -63,11 +72,8 @@
         <div class="hero-overlay"></div>
         <img src="Untitled(1).png" alt="background-image" class="hero-bg">
         <div class="hero-content">
-            <h1 class="fade-in-up">Lights of the East</h1>
-            <p class="fade-in-up delay-1"
-                style="font-family: 'Cinzel', serif; font-weight: 600; font-size: clamp(1.4rem, 4vw, 2.8rem); color: #D4AF37; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 4px 15px rgba(0,0,0,1), 0 10px 30px rgba(0,0,0,0.9), 0 0 50px rgba(0,0,0,0.8); margin-bottom: 1.5rem; line-height: 1.2;">
-                LODGE 33</p>
-            <p class="fade-in-up delay-1">Dedicated to Brotherhood, Charity &amp; Truth since 1892.</p>
+            <h1 class="fade-in-up">Lights of the East<br>Lodge No. 33</h1>
+            <p class="fade-in-up delay-1">Dedicated to Brotherhood, Charity, and Truth, Since December 2025</p>
             <div class="hero-actions fade-in-up delay-2">
                 <a href="#about" class="btn-primary">Discover More</a>
                 <a href="#contact" class="btn-secondary">Inquire to Join</a>
@@ -82,7 +88,7 @@
                     <h2>About Our Lodge</h2>
                     <div class="divider"></div>
                 </div>
-                <h3 class="reveal section-subheader">Brotherhood, Charity &amp; Truth Since 1892</h3>
+                <h3 class="reveal section-subheader">Brotherhood, Charity, and Truth, Since December 2025</h3>
                 <div class="about-grid">
                     <div class="about-text reveal">
                         <h3>Who We Are</h3>
@@ -118,8 +124,9 @@
                     </div>
                     <div class="about-text reveal delay-1">
                         <h3>Our Founding</h3>
-                        <p>Chartered in 1892, our lodge was established by a small group of dedicated Freemasons who
-                            sought to bring the light of Masonry to this region. Through decades of growth, we have
+                        <p>Established December 2025, our lodge was established by a small group of dedicated
+                            Freemasons who sought to bring the light of Masonry to this region. Through decades of
+                            growth, we have
                             remained steadfast in our mission.</p>
                         <p>From humble beginnings to a thriving brotherhood, our history reflects the enduring strength
                             of the Masonic principles that have guided us through generations of service, fellowship,
@@ -129,57 +136,96 @@
             </div>
         </section>
 
-        <!-- Gallery Section -->
-        <section id="gallery" class="section">
+        <!-- Lineage Section -->
+        <section id="lineage" class="section">
             <div class="container">
                 <div class="section-header reveal">
-                    <h2>Gallery</h2>
+                    <h2>Lineage & Memorandum</h2>
                     <div class="divider"></div>
                 </div>
-                <h3 class="reveal section-subheader">Glimpses of Our Brotherhood and Heritage</h3>
-                <div class="gallery-grid">
-                    <div class="gallery-item tall reveal">
-                        <div class="image-placeholder">
-                            <i class="fas fa-camera"></i>
-                        </div>
+                <h3 class="reveal section-subheader">Our Roots and Foundational Brothers</h3>
+                <div class="about-grid">
+                    <div class="about-text reveal">
+                        <h3>Historical Connection</h3>
+                        <p>Our lodge carries a proud lineage involving Ed Rushing and our foundational brothers. This
+                            section will detail the historical and organizational connections that established our
+                            origin.</p>
+                        <p><em>(Draft details pending provided historical background)</em></p>
                     </div>
-                    <div class="gallery-item medium reveal delay-1">
-                        <div class="image-placeholder">
-                            <i class="fas fa-users"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-item wide reveal delay-2">
-                        <div class="image-placeholder">
-                            <i class="fas fa-landmark"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-item medium reveal">
+                    <div class="about-image reveal delay-1">
                         <div class="image-placeholder">
                             <i class="fas fa-scroll"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-item tall reveal delay-1">
-                        <div class="image-placeholder">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-item medium reveal delay-2">
-                        <div class="image-placeholder">
-                            <i class="fas fa-handshake"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="leadership" class="section leadership-section dark-bg">
+        <!-- Gallery Section -->
+        <section id="gallery" class="section dark-bg">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Gallery</h2>
+                    <div class="divider"></div>
+                </div>
+                <h3 class="reveal section-subheader">Brotherhood, Fundraisers & Community Service</h3>
+                <div class="gallery-grid" id="dynamic-gallery-grid">
+                    <div class="gallery-item tall reveal">
+                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Architecture" class="gallery-img">
+                    </div>
+                    <div class="gallery-item medium reveal delay-1">
+                        <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Open Book" class="gallery-img">
+                    </div>
+                    <div class="gallery-item wide reveal delay-2">
+                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Fellowship" class="gallery-img">
+                    </div>
+                    <div class="gallery-item tall reveal">
+                        <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Library" class="gallery-img">
+                    </div>
+                    <div class="gallery-item medium reveal delay-1">
+                        <img src="https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Historic Ledger" class="gallery-img">
+                    </div>
+                    <div class="gallery-item tall reveal delay-2">
+                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Classic Windows" class="gallery-img">
+                    </div>
+                    <div class="gallery-item wide reveal">
+                        <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Meeting" class="gallery-img">
+                    </div>
+                    <div class="gallery-item medium reveal delay-1">
+                        <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Writing" class="gallery-img">
+                    </div>
+                    <div class="gallery-item tall reveal delay-2">
+                        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Compass" class="gallery-img">
+                    </div>
+                    <div class="gallery-item medium reveal">
+                        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Light" class="gallery-img">
+                    </div>
+                    <div class="gallery-item wide reveal delay-1">
+                        <img src="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Stone Details" class="gallery-img">
+                    </div>
+                    <div class="gallery-item tall reveal delay-2">
+                        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Charity" class="gallery-img">
+                    </div>
+                    <div class="gallery-item medium reveal">
+                        <img src="https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Cathedral Window" class="gallery-img">
+                    </div>
+                    <div class="gallery-item wide reveal delay-1">
+                        <img src="https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Warm Interior" class="gallery-img">
+                    </div>
+                    <div class="gallery-item tall reveal delay-2">
+                        <img src="https://images.unsplash.com/photo-1519074002996-a69e7ac46a42?auto=format&fit=crop&w=800&q=80" alt="Lodge Gallery Image - Historic Archives" class="gallery-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="leadership" class="section leadership-section">
             <div class="container">
                 <div class="section-header reveal">
                     <h2>Lodge Officers</h2>
                     <div class="divider"></div>
                 </div>
-                <div class="officers-grid">
-
+                <div class="officers-grid collapsed" id="officers-grid">
                     <div class="officer-card reveal">
                         <div class="officer-avatar">
                             <i class="fas fa-user-tie"></i>
@@ -206,12 +252,72 @@
 
                     <div class="officer-card reveal delay-3">
                         <div class="officer-avatar">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <h4>[Senior Deacon]</h4>
+                        <p class="officer-title">Senior Deacon</p>
+                    </div>
+
+                    <div class="officer-card reveal delay-4">
+                        <div class="officer-avatar">
                             <i class="fas fa-user-edit"></i>
                         </div>
                         <h4>[Secretary]</h4>
                         <p class="officer-title">Secretary</p>
                     </div>
 
+                    <div class="officer-card reveal delay-5">
+                        <div class="officer-avatar">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h4>[Treasurer]</h4>
+                        <p class="officer-title">Treasurer</p>
+                    </div>
+
+                    <div class="officer-card reveal delay-6">
+                        <div class="officer-avatar">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h4>[Senior Steward]</h4>
+                        <p class="officer-title">Senior Steward</p>
+                    </div>
+
+                    <div class="officer-card reveal delay-7">
+                        <div class="officer-avatar">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h4>[Junior Steward]</h4>
+                        <p class="officer-title">Junior Steward</p>
+                    </div>
+
+                    <div class="officer-card reveal delay-8">
+                        <div class="officer-avatar">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <h4>[Marshal]</h4>
+                        <p class="officer-title">Marshal</p>
+                    </div>
+
+                    <div class="officer-card reveal delay-9">
+                        <div class="officer-avatar">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h4>[Chaplain]</h4>
+                        <p class="officer-title">Chaplain</p>
+                    </div>
+
+                    <div class="officer-card reveal delay-10">
+                        <div class="officer-avatar">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h4>[Past Master]</h4>
+                        <p class="officer-title">Past Master</p>
+                    </div>
+                </div>
+
+                <div class="reveal delay-3"
+                    style="text-align: center; margin-top: 3rem; display: flex; justify-content: center;">
+                    <button id="view-more-officers" class="btn-secondary">View More</button>
                 </div>
             </div>
         </section>
@@ -227,8 +333,9 @@
                 <div class="tenets-grid">
                     <div class="tenet-card reveal">
                         <div class="tenet-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <h3>Annual Scholarship</h3>
-                        <p>Each year we award scholarships to deserving students in our community. Applicants are
+                        <h3>Bi-Annual Scholarships</h3>
+                        <p>Every other year, we award scholarships to deserving students in our community. Applicants
+                            are
                             evaluated on academic achievement, character, and community involvement.</p>
                     </div>
                     <div class="tenet-card reveal delay-1">
@@ -284,24 +391,26 @@
                 </div>
                 <h3 class="reveal section-subheader">Upcoming Meetings, Dinners &amp; Community Gatherings</h3>
 
-                <div class="event-featured reveal">
-                    <div class="event-image">
-                        <div class="image-placeholder">
-                            <i class="fas fa-calendar-alt"></i>
+                <div id="dynamic-events-container">
+                    <div class="event-featured reveal">
+                        <div class="event-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="event-details">
-                        <h3>[Event Name]</h3>
-                        <p class="event-meta">
-                            <span><i class="fas fa-clock"></i> [Day], [Time]</span>
-                            <span><i class="fas fa-map-marker-alt"></i> [Location]</span>
-                        </p>
-                        <p class="event-description">[Event description goes here. Provide a brief summary of the event,
-                            who is invited, what to expect, and any details attendees should know before arriving.]</p>
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                            <a href="#contact" class="btn-primary">RSVP Now</a>
-                            <button class="btn-secondary" id="open-share-modal"><i class="fas fa-share-alt"
-                                    style="margin-right: 8px;"></i>Share</button>
+                        <div class="event-details">
+                            <h3>[Event Name]</h3>
+                            <p class="event-meta">
+                                <span><i class="fas fa-clock"></i> [Day], [Time]</span>
+                                <span><i class="fas fa-map-marker-alt"></i> [Location]</span>
+                            </p>
+                            <p class="event-description">[Event description goes here. Provide a brief summary of the event,
+                                who is invited, what to expect, and any details attendees should know before arriving.]</p>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                                <a href="#contact" class="btn-primary">RSVP Now</a>
+                                <button class="btn-secondary" id="open-share-modal"><i class="fas fa-share-alt"
+                                        style="margin-right: 8px;"></i>Share</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -390,14 +499,14 @@
                             <i class="fas fa-envelope"></i>
                             <div>
                                 <h4>Email</h4>
-                                <p>[1234@gmail.com]</p>
+                                <p>[admin@lightsoftheeast.com]</p>
                             </div>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-calendar-alt"></i>
                             <div>
                                 <h4>Stated Meetings</h4>
-                                <p>[Day of Month] at [Location]<br>Dinner: 6:30 PM | Lodge: 7:30 PM</p>
+                                <p>Every 2nd Saturday at 3:00 PM<br>Location: TBD</p>
                             </div>
                         </div>
                     </div>
@@ -431,7 +540,7 @@
             <div class="footer-brand">
                 <a href="#home" class="logo-container">
                     <img src="icon.png" alt="Lodge Logo" class="logo-img">
-                    <span class="logo-text">Lights of<br>the East</span>
+                    <span class="logo-text">Lights of the East<br>Lodge No. 33</span>
                 </a>
             </div>
             <div class="footer-links">
@@ -443,22 +552,19 @@
             <div class="footer-social">
                 <h4>Follow Us</h4>
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.facebook.com/groups/899175712884782/" target="_blank"
+                        rel="noopener noreferrer">
                         <i class="fab fa-facebook-f"></i>
                     </a>
 
-                    <a href="https://www.x.com/" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.instagram.com/lightsoftheeast33/" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-instagram"></i>
                     </a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Lights of the East. All rights reserved.</p>
+            <p>&copy; 2026 Lights of the East Lodge No. 33. All rights reserved.</p>
         </div>
     </footer>
 

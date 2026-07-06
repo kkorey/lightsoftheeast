@@ -191,6 +191,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // View More Officers Toggle
+    const viewMoreOfficersBtn = document.getElementById('view-more-officers');
+    const officersGrid = document.getElementById('officers-grid');
+
+    if (viewMoreOfficersBtn && officersGrid) {
+        viewMoreOfficersBtn.addEventListener('click', () => {
+            const isCollapsed = officersGrid.classList.contains('collapsed');
+            if (isCollapsed) {
+                officersGrid.classList.remove('collapsed');
+                viewMoreOfficersBtn.textContent = 'View Less';
+                // Trigger reveal animations for the newly shown cards
+                setTimeout(() => {
+                    officersGrid.querySelectorAll('.officer-card.reveal').forEach(el => {
+                        el.classList.add('active');
+                    });
+                }, 50);
+            } else {
+                officersGrid.classList.add('collapsed');
+                viewMoreOfficersBtn.textContent = 'View More';
+                // Scroll back to the top of the officers section for better UX
+                const section = document.getElementById('leadership');
+                if (section) {
+                    window.scrollTo({
+                        top: section.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    }
+
     // Share Modal Logic
     const shareModal = document.getElementById('share-modal');
     const openShareBtn = document.getElementById('open-share-modal');
@@ -247,4 +278,228 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Supabase Dynamic Gallery Loader
+    async function initSupabaseGallery() {
+        const galleryGrid = document.getElementById('dynamic-gallery-grid');
+        if (!galleryGrid) return;
+
+        try {
+            if (!window.supabase) {
+                console.warn('Supabase client not loaded. Using fallback gallery images.');
+                return;
+            }
+
+            // List files in the 'photos' storage bucket
+            const { data, error } = await window.supabase.storage.from('photos').list('', {
+                limit: 100,
+                sortBy: { column: 'name', order: 'asc' }
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            // Filter out non-image files or hidden files
+            const imageFiles = (data || []).filter(file => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'].includes(ext);
+            });
+
+            if (imageFiles.length === 0) {
+                console.log('No photos found in Supabase storage bucket "photos". Using fallback gallery images.');
+                return;
+            }
+
+            // Clear the existing fallback items
+            galleryGrid.innerHTML = '';
+
+            const sizes = ['tall', 'medium', 'wide'];
+
+            imageFiles.forEach((file, index) => {
+                // Get the public URL for the image
+                const { data: urlData } = window.supabase.storage.from('photos').getPublicUrl(file.name);
+                const imageUrl = urlData?.publicUrl;
+
+                if (!imageUrl) return;
+
+                const itemDiv = document.createElement('div');
+                const sizeClass = sizes[index % 3];
+                itemDiv.className = `gallery-item ${sizeClass} reveal`;
+
+                const delayIndex = index % 3;
+                if (delayIndex > 0) {
+                    itemDiv.classList.add(`delay-${delayIndex}`);
+                }
+
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = file.name.replace(/\.[^/.]+$/, "") || "Lodge Gallery Image";
+                img.className = 'gallery-img';
+
+                itemDiv.appendChild(img);
+                galleryGrid.appendChild(itemDiv);
+
+                // Observe the dynamic element so scroll animations work
+                if (typeof revealOnScroll !== 'undefined' && revealOnScroll.observe) {
+                    revealOnScroll.observe(itemDiv);
+                }
+            });
+
+        } catch (err) {
+            console.error('Error loading gallery from Supabase:', err);
+        }
+    }
+
+    // Google Calendar Dynamic Loader
+    async function initGoogleCalendar() {
+        const eventsContainer = document.getElementById('dynamic-events-container');
+        if (!eventsContainer) return;
+
+        try {
+            const config = window.googleCalendarConfig;
+            if (!config || !config.calendarId || !config.apiKey || 
+                config.calendarId === 'YOUR_GOOGLE_CALENDAR_ID' || 
+                config.apiKey === 'YOUR_GOOGLE_CALENDAR_API_KEY') {
+                console.warn('Google Calendar configuration placeholders detected. Using fallback static events.');
+                return;
+            }
+
+            // Fetch upcoming events from Google Calendar API v3
+            const now = new Date().toISOString();
+            const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(config.calendarId)}/events?key=${config.apiKey}&timeMin=${now}&singleEvents=true&orderBy=startTime&maxResults=5`;
+
+            const res = await fetch(url);
+            if (!res.ok) {
+                throw new Error(`Calendar API returned status ${res.status}`);
+            }
+
+            const data = await res.json();
+            const events = data.items || [];
+
+            if (events.length === 0) {
+                eventsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 0; grid-column: 1 / -1;">
+                        <i class="fas fa-calendar-times" style="font-size: 3rem; color: rgba(212, 175, 55, 0.2); margin-bottom: 1rem; display: block;"></i>
+                        <p style="color: var(--color-text-muted);">No upcoming events scheduled at this time. Check back soon!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Helpers for formatting
+            function formatEventDate(start) {
+                if (!start) return '';
+                const date = new Date(start.dateTime || start.date);
+                if (start.date) {
+                    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+                }
+                return date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                }).replace(', at', ' at');
+            }
+
+            function getEventIcon(summary) {
+                const title = (summary || '').toLowerCase();
+                if (title.includes('dinner') || title.includes('meal') || title.includes('feast') || title.includes('breakfast')) return 'fa-utensils';
+                if (title.includes('meeting') || title.includes('communication') || title.includes('lodge')) return 'fa-gavel';
+                if (title.includes('degree') || title.includes('initiation') || title.includes('work')) return 'fa-scroll';
+                if (title.includes('charity') || title.includes('donation') || title.includes('fundraiser')) return 'fa-hand-holding-heart';
+                return 'fa-calendar-alt';
+            }
+
+            function formatDescription(desc) {
+                if (!desc) return 'No description available for this event.';
+                let text = desc.replace(/<[^>]*>/g, ''); // Strip simple HTML
+                if (text.length > 180) {
+                    text = text.substring(0, 180) + '...';
+                }
+                return text;
+            }
+
+            // Clear the container
+            eventsContainer.innerHTML = '';
+
+            // 1. Featured Event (First upcoming event)
+            const featured = events[0];
+            const featuredIcon = getEventIcon(featured.summary);
+            const featuredDate = formatEventDate(featured.start);
+            const featuredLocation = featured.location || 'Location to be announced';
+            const featuredDesc = formatDescription(featured.description);
+
+            const featuredHtml = `
+                <div class="event-featured reveal">
+                    <div class="event-image">
+                        <div class="image-placeholder">
+                            <i class="fas ${featuredIcon}"></i>
+                        </div>
+                    </div>
+                    <div class="event-details">
+                        <h3>${featured.summary || 'Stated Communication'}</h3>
+                        <p class="event-meta">
+                            <span><i class="fas fa-clock"></i> ${featuredDate}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> ${featuredLocation}</span>
+                        </p>
+                        <p class="event-description">${featuredDesc}</p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                            <a href="#contact" class="btn-primary">RSVP Now</a>
+                            <button class="btn-secondary" onclick="navigator.clipboard.writeText('${window.location.origin}/#events').then(() => alert('Event link copied to clipboard!'))"><i class="fas fa-share-alt" style="margin-right: 8px;"></i>Share</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            eventsContainer.innerHTML += featuredHtml;
+
+            // 2. Grid of remaining events (if any)
+            if (events.length > 1) {
+                let gridHtml = '<div class="events-grid" style="margin-top: 2rem;">';
+                for (let i = 1; i < events.length; i++) {
+                    const event = events[i];
+                    const icon = getEventIcon(event.summary);
+                    const dateStr = formatEventDate(event.start);
+                    const location = event.location || 'Location to be announced';
+                    const desc = formatDescription(event.description);
+                    const delayClass = i % 2 === 1 ? 'delay-1' : '';
+
+                    gridHtml += `
+                        <div class="event-featured small-event reveal ${delayClass}">
+                            <div class="event-image">
+                                <div class="image-placeholder">
+                                    <i class="fas ${icon}"></i>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <h3>${event.summary || 'Upcoming Lodge Event'}</h3>
+                                <p class="event-meta">
+                                    <span><i class="fas fa-clock"></i> ${dateStr}</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> ${location}</span>
+                                </p>
+                                <p class="event-description">${desc}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                gridHtml += '</div>';
+                eventsContainer.innerHTML += gridHtml;
+            }
+
+            // Hook scroll animation onto newly generated elements
+            if (typeof revealOnScroll !== 'undefined' && revealOnScroll.observe) {
+                eventsContainer.querySelectorAll('.reveal').forEach(el => {
+                    revealOnScroll.observe(el);
+                });
+            }
+
+        } catch (err) {
+            console.error('Error loading calendar events:', err);
+        }
+    }
+
+    // Execute initializations
+    initSupabaseGallery();
+    initGoogleCalendar();
 });
