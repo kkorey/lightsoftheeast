@@ -307,11 +307,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (imageFiles.length === 0) {
-                console.log('No photos found in Supabase storage bucket "photos". Using fallback gallery images.');
+                console.log('No photos found in Supabase storage bucket "photos".');
+                galleryGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 0; color: var(--color-text-muted);">
+                        <i class="fas fa-images" style="font-size: 3.5rem; color: rgba(212, 175, 55, 0.15); margin-bottom: 1.5rem; display: block;"></i>
+                        <p style="font-size: 1.1rem; letter-spacing: 0.5px;">No photos uploaded to the gallery yet. Check back soon!</p>
+                    </div>
+                `;
                 return;
             }
 
-            // Clear the existing fallback items
+            // Clear the existing items
             galleryGrid.innerHTML = '';
 
             const sizes = ['tall', 'medium', 'wide'];
