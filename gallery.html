@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Lights of the East Lodge No. 33</title>
+    <meta name="description"
+        content="Browse through the photographs of Lights of the East Lodge No. 33. Explore our lodge events, brotherhood meetings, fundraisers, and community services.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase configuration -->
+    <script src="supabase-config.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="scrolled">
+        <div class="nav-container">
+            <a href="index.html#home" class="logo-container">
+                <img src="icon.png" alt="Lodge Logo" class="logo-img" id="nav-logo">
+                <span class="logo-text">Lights of the East<br>Lodge No. 33</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#home">Home</a>
+                <div class="dropdown desktop-only">
+                    <a href="index.html#about" class="dropbtn"><span class="nav-label">About Us</span> <i
+                            class="fas fa-chevron-down" style="font-size: 0.6rem; margin-left: 3px;"></i></a>
+                    <div class="dropdown-content">
+                        <a href="index.html#history">History</a>
+                        <a href="index.html#lineage">Lineage</a>
+                        <a href="gallery.html" class="active">Gallery</a>
+                        <a href="index.html#leadership">Lodge Officers</a>
+                        <a href="index.html#scholarships">Scholarships</a>
+                        <a href="index.html#in-memoriam">In Memoriam</a>
+                    </div>
+                </div>
+                <a href="index.html#about" class="mobile-only">About Us</a>
+                <a href="index.html#history" class="mobile-only">History</a>
+                <a href="gallery.html" class="mobile-only active">Gallery</a>
+                <a href="index.html#leadership" class="mobile-only">Lodge Officers</a>
+                <a href="index.html#scholarships" class="mobile-only">Scholarships</a>
+                <a href="index.html#in-memoriam" class="mobile-only">In Memoriam</a>
+                <a href="index.html#events">Events</a>
+                <a href="index.html#store">Store</a>
+                <a href="index.html#contact">Contact Us</a>
+                <a href="cart.html" class="desktop-cart"><i class="fas fa-shopping-cart"></i></a>
+                <a href="portal.html" class="btn-primary btn-nav"><i class="fas fa-lock"></i> Member Portal</a>
+            </div>
+            <div class="mobile-actions">
+                <a href="cart.html" class="mobile-cart"><i class="fas fa-shopping-cart"></i></a>
+                <div class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Subpage Hero -->
+    <header class="hero subpage-hero">
+        <div class="hero-overlay"></div>
+        <img src="Untitled(1).png" alt="background-image" class="hero-bg">
+        <div class="hero-content">
+            <h1 class="fade-in-up">Lodge Gallery</h1>
+            <p class="fade-in-up delay-1">Brotherhood, Fundraisers & Community Service</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="section dark-bg" style="padding-top: 5rem;">
+            <div class="container-fluid" style="max-width: 100%; width: 100%; padding: 0 4rem;">
+                <div style="margin-bottom: 2rem;">
+                    <a href="index.html#gallery" class="back-link">
+                        <i class="fas fa-arrow-left"></i> Back to Homepage Gallery
+                    </a>
+                </div>
+
+                <div class="section-header reveal">
+                    <h2>Our Photos</h2>
+                    <div class="divider"></div>
+                </div>
+                
+                <!-- The gallery-grid has NO .collapsed class so it renders all photos -->
+                <div class="gallery-grid full-width" id="dynamic-gallery-grid">
+                    <!-- Images will dynamically load here from Supabase Storage or Fallback -->
+                </div>
+
+                <div class="reveal delay-2" style="text-align: center; margin-top: 5rem;">
+                    <a href="index.html#gallery" class="btn-primary">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Back to Homepage Gallery
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html#home" class="logo-container">
+                    <img src="icon.png" alt="Lodge Logo" class="logo-img">
+                    <span class="logo-text">Lights of the East<br>Lodge No. 33</span>
+                </a>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html#home">Home</a>
+                <a href="index.html#about">About</a>
+                <a href="portal.html">Member Portal</a>
+            </div>
+            <div class="footer-social">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/groups/899175712884782/" target="_blank"
+                        rel="noopener noreferrer">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+
+                    <a href="https://www.instagram.com/lightsoftheeast33/" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Lights of the East Lodge No. 33. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

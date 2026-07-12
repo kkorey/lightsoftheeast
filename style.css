@@ -726,6 +726,11 @@ nav.scrolled {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
 }
 
+/* Gallery Section Toggle */
+.gallery-grid.collapsed .gallery-item:nth-child(n+7) {
+    display: none !important;
+}
+
 @media (max-width: 768px) {
     .gallery-grid {
         column-count: auto;
@@ -1106,4 +1111,57 @@ footer {
     .desktop-cart {
         display: none !important;
     }
+}
+
+/* Subpage Hero Styles */
+.subpage-hero {
+    height: 45vh !important;
+    min-height: 320px !important;
+}
+
+.subpage-hero .hero-content h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem) !important;
+}
+
+/* Full Width Gallery Grid (Subpage) */
+.gallery-grid.full-width {
+    column-count: 4;
+}
+
+@media (min-width: 1600px) {
+    .gallery-grid.full-width {
+        column-count: 5;
+    }
+}
+
+@media (max-width: 1200px) {
+    .gallery-grid.full-width {
+        column-count: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .gallery-grid.full-width {
+        column-count: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+}
+
+/* Back Link Styling */
+.back-link {
+    color: var(--color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    transition: var(--transition-standard);
+}
+
+.back-link:hover {
+    color: var(--color-primary);
 }

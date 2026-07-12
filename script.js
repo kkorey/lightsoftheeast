@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const isHomepage = !!document.querySelector('.hero');
     // Nav scroll effect
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
@@ -127,9 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 100);
             return;
         }
-        updateNavHighlight();
+        if (isHomepage) {
+            updateNavHighlight();
+        }
     });
-    updateNavHighlight(); // Run once on load
+    if (isHomepage) {
+        updateNavHighlight(); // Run once on load
+    }
 
 
     // Smooth scroll for anchor links
@@ -285,36 +290,54 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!galleryGrid) return;
 
         try {
+            let imageFiles = [];
+            let isUsingFallback = false;
+
             if (!window.supabase) {
                 console.warn('Supabase client not loaded. Using fallback gallery images.');
-                return;
+                isUsingFallback = true;
+            } else {
+                // List files in the 'photos' storage bucket
+                const { data, error } = await window.supabase.storage.from('photos').list('', {
+                    limit: 100,
+                    sortBy: { column: 'name', order: 'asc' }
+                });
+
+                if (error) {
+                    console.error('Error fetching from Supabase, using fallbacks:', error);
+                    isUsingFallback = true;
+                } else {
+                    imageFiles = (data || []).filter(file => {
+                        const ext = file.name.split('.').pop().toLowerCase();
+                        return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'].includes(ext);
+                    });
+
+                    if (imageFiles.length === 0) {
+                        console.log('No photos found in Supabase storage bucket "photos". Using fallback gallery images.');
+                        isUsingFallback = true;
+                    }
+                }
             }
 
-            // List files in the 'photos' storage bucket
-            const { data, error } = await window.supabase.storage.from('photos').list('', {
-                limit: 100,
-                sortBy: { column: 'name', order: 'asc' }
-            });
+            if (isUsingFallback) {
+                // Set up fallback image URLs (free high quality photography from Unsplash representing masonry and lodge activities)
+                const fallbackUrls = [
+                    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=800'
+                ];
 
-            if (error) {
-                throw error;
-            }
-
-            // Filter out non-image files or hidden files
-            const imageFiles = (data || []).filter(file => {
-                const ext = file.name.split('.').pop().toLowerCase();
-                return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'].includes(ext);
-            });
-
-            if (imageFiles.length === 0) {
-                console.log('No photos found in Supabase storage bucket "photos".');
-                galleryGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 0; color: var(--color-text-muted);">
-                        <i class="fas fa-images" style="font-size: 3.5rem; color: rgba(212, 175, 55, 0.15); margin-bottom: 1.5rem; display: block;"></i>
-                        <p style="font-size: 1.1rem; letter-spacing: 0.5px;">No photos uploaded to the gallery yet. Check back soon!</p>
-                    </div>
-                `;
-                return;
+                imageFiles = fallbackUrls.map((url, i) => ({
+                    name: `Gallery Image ${i + 1}`,
+                    isFallback: true,
+                    url: url
+                }));
             }
 
             // Clear the existing items
@@ -323,20 +346,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const sizes = ['tall', 'medium', 'wide'];
 
             imageFiles.forEach((file, index) => {
-                // Get the public URL for the image
-                const { data: urlData } = window.supabase.storage.from('photos').getPublicUrl(file.name);
-                const imageUrl = urlData?.publicUrl;
+                let imageUrl;
+                if (file.isFallback) {
+                    imageUrl = file.url;
+                } else {
+                    // Get the public URL for the image
+                    const { data: urlData } = window.supabase.storage.from('photos').getPublicUrl(file.name);
+                    imageUrl = urlData?.publicUrl;
+                }
 
                 if (!imageUrl) return;
 
                 const itemDiv = document.createElement('div');
                 const sizeClass = sizes[index % 3];
-                itemDiv.className = `gallery-item ${sizeClass} reveal`;
-
-                const delayIndex = index % 3;
-                if (delayIndex > 0) {
-                    itemDiv.classList.add(`delay-${delayIndex}`);
-                }
+                itemDiv.className = `gallery-item ${sizeClass}`;
 
                 const img = document.createElement('img');
                 img.src = imageUrl;
@@ -345,15 +368,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 itemDiv.appendChild(img);
                 galleryGrid.appendChild(itemDiv);
-
-                // Observe the dynamic element so scroll animations work
-                if (typeof revealOnScroll !== 'undefined' && revealOnScroll.observe) {
-                    revealOnScroll.observe(itemDiv);
-                }
             });
 
+            // Set up gallery toggle button
+            const DEFAULT_SHOW_COUNT = 6;
+            const galleryActions = document.getElementById('gallery-actions');
+
+            if (imageFiles.length > DEFAULT_SHOW_COUNT) {
+                if (galleryActions) {
+                    galleryActions.style.display = 'flex';
+                }
+            } else {
+                if (galleryActions) {
+                    galleryActions.style.display = 'none';
+                }
+            }
+
         } catch (err) {
-            console.error('Error loading gallery from Supabase:', err);
+            console.error('Error loading gallery:', err);
         }
     }
 
