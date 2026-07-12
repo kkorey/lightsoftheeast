@@ -79,9 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Maps sub-sections to their parent nav link
     const sectionNavMap = {
-        'history':     '#about',
-        'gallery':     '#about',
-        'leadership':  '#about',
+        'history': '#about',
+        'gallery': '#about',
+        'leadership': '#about',
         'scholarships': '#about',
         'in-memoriam': '#about'
     };
@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (extraEventsGrid) {
                     extraEventsGrid.innerHTML = '';
                     const showCount = Math.min(events.length, 3); // Max 3 events total (1 featured + 2 extra)
-                    
+
                     let gridHtml = '';
                     for (let i = 1; i < showCount; i++) {
                         const event = events[i];
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (viewMoreBtn) {
                     viewMoreBtn.style.display = 'inline-block';
-                    
+
                     // Rebind click listener to prevent duplicate handlers
                     const newBtn = viewMoreBtn.cloneNode(true);
                     viewMoreBtn.parentNode.replaceChild(newBtn, viewMoreBtn);
@@ -551,7 +551,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Contact Form Handler via Supabase Edge Function
+    function initContactForm() {
+        const form = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('contact-submit-btn');
+        if (!form || !submitBtn) return;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!window.supabase) {
+                alert('Supabase client not loaded. Unable to send message.');
+                return;
+            }
+
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const subject = document.getElementById('contact-subject').value;
+            const message = document.getElementById('contact-message').value;
+
+            // Change button to loading state
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            try {
+                console.log('Sending message to send-contact-email Edge Function...');
+                const { data, error } = await window.supabase.functions.invoke('send-contact-email', {
+                    body: { name, email, subject, message }
+                });
+
+                if (error) {
+                    console.error('Supabase invocation error:', error);
+                    throw error;
+                }
+
+                console.log('Response:', data);
+                alert('Thank you! Your message has been sent successfully.');
+                form.reset();
+
+            } catch (err) {
+                console.error('Failed to send message:', err);
+                alert('Oops! Something went wrong while sending your message. Please try again later.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    }
+
     // Execute initializations
     initSupabaseGallery();
     initGoogleCalendar();
+    initContactForm();
 });

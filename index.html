@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lights of the East Lodge No. 33</title>
+    <title>Lights of the East Lodge No. 33 | Freemasonry Georgia</title>
     <meta name="description"
-        content="Welcome to Lights of the East Lodge No. 33. Discover the history, values, and brotherhood of Freemasonry in Georgia. Dedicated to Brotherhood, Charity, and Truth since December 2025.">
+        content="Welcome to Lights of the East Lodge No. 33, a premier Georgia Masonic Lodge. Discover the history, values, and brotherhood of Freemasonry in Georgia. Looking for a Masonic Lodge near us? Learn how to join our brotherhood.">
     <meta name="keywords"
-        content="Freemasonry Georgia, Masonic Lodge Near Me, Lights of the East Lodge No. 33, Georgia Masons, Freemasons Atlanta">
+        content="Freemasonry Georgia, Masonic Lodge Near Us, Lights of the East Lodge No. 33, Georgia Masons, Freemasons Atlanta, Masonic Lodge Near Me">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="favicon.png">
     <!-- Google Fonts for premium typography -->
@@ -172,7 +172,8 @@
                     <!-- Images will dynamically load here from Supabase Storage -->
                 </div>
 
-                <div class="reveal delay-3" id="gallery-actions" style="text-align: center; margin-top: 3rem; display: none; justify-content: center;">
+                <div class="reveal delay-3" id="gallery-actions"
+                    style="text-align: center; margin-top: 3rem; display: none; justify-content: center;">
                     <a href="gallery.html" class="btn-secondary" style="text-decoration: none;">View More</a>
                 </div>
             </div>
@@ -353,8 +354,10 @@
                 <div id="dynamic-events-container">
                     <!-- Clean State: No events scheduled -->
                     <div style="text-align: center; padding: 4rem 0; width: 100%;">
-                        <i class="fas fa-calendar-times" style="font-size: 3.5rem; color: rgba(212, 175, 55, 0.25); margin-bottom: 1.5rem; display: block;"></i>
-                        <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">No upcoming events scheduled at this time. Check back soon!</p>
+                        <i class="fas fa-calendar-times"
+                            style="font-size: 3.5rem; color: rgba(212, 175, 55, 0.25); margin-bottom: 1.5rem; display: block;"></i>
+                        <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">
+                            No upcoming events scheduled at this time. Check back soon!</p>
                     </div>
                 </div>
 
@@ -424,25 +427,24 @@
                             </div>
                         </div>
                     </div>
-                    <form class="contact-form reveal delay-1"
-                        onsubmit="event.preventDefault(); alert('Form submitted!');">
+                    <form class="contact-form reveal delay-1" id="contact-form">
                         <div class="form-group">
-                            <input type="text" placeholder="Your Full Name" required>
+                            <input type="text" id="contact-name" placeholder="Your Full Name" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" placeholder="Your Email Address" required>
+                            <input type="email" id="contact-email" placeholder="Your Email Address" required>
                         </div>
                         <div class="form-group">
-                            <select>
-                                <option value="general">General Inquiry</option>
-                                <option value="visiting">Visiting the Lodge</option>
-                                <option value="joining">Interested in Joining</option>
+                            <select id="contact-subject">
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Visiting the Lodge">Visiting the Lodge</option>
+                                <option value="Interested in Joining">Interested in Joining</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <textarea rows="4" placeholder="Your Message" required></textarea>
+                            <textarea id="contact-message" rows="4" placeholder="Your Message" required></textarea>
                         </div>
-                        <button type="submit" class="btn-primary w-100">Send Message</button>
+                        <button type="submit" class="btn-primary w-100" id="contact-submit-btn">Send Message</button>
                     </form>
                 </div>
             </div>
