@@ -175,26 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // View More Events Toggle
-    const viewMoreEventsBtn = document.getElementById('view-more-events');
-    const pastEventsContainer = document.querySelector('.past-events-container');
-
-    if (viewMoreEventsBtn && pastEventsContainer) {
-        viewMoreEventsBtn.addEventListener('click', () => {
-            const isShowing = viewMoreEventsBtn.textContent === 'View Less';
-            if (isShowing) {
-                pastEventsContainer.style.display = 'none';
-                viewMoreEventsBtn.textContent = 'View More';
-            } else {
-                pastEventsContainer.style.display = 'block';
-                // Trigger reveal animations inside the container
-                setTimeout(() => {
-                    pastEventsContainer.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-                }, 50);
-                viewMoreEventsBtn.textContent = 'View Less';
-            }
-        });
-    }
 
     // View More Officers Toggle
     const viewMoreOfficersBtn = document.getElementById('view-more-officers');
@@ -389,6 +369,189 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Google Calendar Dynamic Loader via Supabase Edge Function
+    async function initGoogleCalendar() {
+        const eventsContainer = document.getElementById('dynamic-events-container');
+        if (!eventsContainer) return;
+
+        try {
+            if (!window.supabase) {
+                console.warn('Supabase client not loaded. Using fallback static events.');
+                return;
+            }
+
+            console.log('Invoking Supabase Edge Function dynamic-endpoint...');
+            const { data, error } = await window.supabase.functions.invoke('dynamic-endpoint', {
+                method: 'GET'
+            });
+
+            if (error) {
+                console.error('Supabase Edge Function invocation error:', error);
+                throw error;
+            }
+
+            console.log('Edge Function response data:', data);
+            const events = data?.events || [];
+
+            if (events.length === 0) {
+                eventsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 0; width: 100%;">
+                        <i class="fas fa-calendar-times" style="font-size: 3.5rem; color: rgba(212, 175, 55, 0.25); margin-bottom: 1.5rem; display: block;"></i>
+                        <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">No upcoming events scheduled at this time. Check back soon!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Helpers for formatting
+            function formatEventDate(start) {
+                if (!start) return '';
+                const date = new Date(start.dateTime || start.date);
+                if (start.date) {
+                    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+                }
+                return date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                }).replace(', at', ' at');
+            }
+
+            function getEventIcon(summary) {
+                const title = (summary || '').toLowerCase();
+                if (title.includes('dinner') || title.includes('meal') || title.includes('feast') || title.includes('breakfast')) return 'fa-utensils';
+                if (title.includes('meeting') || title.includes('communication') || title.includes('lodge')) return 'fa-gavel';
+                if (title.includes('degree') || title.includes('initiation') || title.includes('work')) return 'fa-scroll';
+                if (title.includes('charity') || title.includes('donation') || title.includes('fundraiser')) return 'fa-hand-holding-heart';
+                return 'fa-calendar-alt';
+            }
+
+            function formatDescription(desc) {
+                if (!desc) return 'No description available for this event.';
+                let text = desc.replace(/<[^>]*>/g, ''); // Strip simple HTML
+                if (text.length > 180) {
+                    text = text.substring(0, 180) + '...';
+                }
+                return text;
+            }
+
+            // Clear the container
+            eventsContainer.innerHTML = '';
+
+            // 1. Featured Event (First upcoming event)
+            const featured = events[0];
+            const featuredIcon = getEventIcon(featured.summary);
+            const featuredDate = formatEventDate(featured.start);
+            const featuredLocation = featured.location || 'Location to be announced';
+            const featuredDesc = formatDescription(featured.description);
+
+            const featuredHtml = `
+                <div class="event-featured reveal active">
+                    <div class="event-image">
+                        <div class="image-placeholder">
+                            <i class="fas ${featuredIcon}"></i>
+                        </div>
+                    </div>
+                    <div class="event-details">
+                        <h3>${featured.summary || 'Stated Communication'}</h3>
+                        <p class="event-meta">
+                            <span><i class="fas fa-clock"></i> ${featuredDate}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> ${featuredLocation}</span>
+                        </p>
+                        <p class="event-description">${featuredDesc}</p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                            <a href="#contact" class="btn-primary">RSVP Now</a>
+                            <button class="btn-secondary" id="open-share-modal-btn"><i class="fas fa-share-alt" style="margin-right: 8px;"></i>Share</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            eventsContainer.innerHTML += featuredHtml;
+
+            // Rebind share modal open event listener to dynamic button
+            const dynamicShareBtn = document.getElementById('open-share-modal-btn');
+            const shareModal = document.getElementById('share-modal');
+            if (dynamicShareBtn && shareModal) {
+                dynamicShareBtn.addEventListener('click', () => {
+                    const shareCopyError = document.getElementById('share-copy-error');
+                    if (shareCopyError) shareCopyError.style.display = 'none';
+                    shareModal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            // 2. Setup Extra Events Grid (Up to 2 additional events)
+            const extraEventsContainer = document.querySelector('.extra-events-container');
+            const extraEventsGrid = document.getElementById('extra-events-grid');
+            const viewMoreBtn = document.getElementById('view-more-events');
+
+            if (events.length > 1) {
+                if (extraEventsGrid) {
+                    extraEventsGrid.innerHTML = '';
+                    const showCount = Math.min(events.length, 3); // Max 3 events total (1 featured + 2 extra)
+                    
+                    let gridHtml = '';
+                    for (let i = 1; i < showCount; i++) {
+                        const event = events[i];
+                        const icon = getEventIcon(event.summary);
+                        const dateStr = formatEventDate(event.start);
+                        const location = event.location || 'Location to be announced';
+                        const desc = formatDescription(event.description);
+                        const delayClass = i % 2 === 1 ? 'delay-1' : '';
+
+                        gridHtml += `
+                            <div class="event-featured small-event reveal active ${delayClass}">
+                                <div class="event-image">
+                                    <div class="image-placeholder">
+                                        <i class="fas ${icon}"></i>
+                                    </div>
+                                </div>
+                                <div class="event-details">
+                                    <h3>${event.summary || 'Upcoming Lodge Event'}</h3>
+                                    <p class="event-meta">
+                                        <span><i class="fas fa-clock"></i> ${dateStr}</span>
+                                        <span><i class="fas fa-map-marker-alt"></i> ${location}</span>
+                                    </p>
+                                    <p class="event-description">${desc}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    extraEventsGrid.innerHTML = gridHtml;
+                }
+
+                if (viewMoreBtn) {
+                    viewMoreBtn.style.display = 'inline-block';
+                    
+                    // Rebind click listener to prevent duplicate handlers
+                    const newBtn = viewMoreBtn.cloneNode(true);
+                    viewMoreBtn.parentNode.replaceChild(newBtn, viewMoreBtn);
+
+                    newBtn.addEventListener('click', () => {
+                        const isShowing = newBtn.textContent === 'View Less';
+                        if (isShowing) {
+                            if (extraEventsContainer) extraEventsContainer.style.display = 'none';
+                            newBtn.textContent = 'View More';
+                        } else {
+                            if (extraEventsContainer) extraEventsContainer.style.display = 'block';
+                            newBtn.textContent = 'View Less';
+                        }
+                    });
+                }
+            } else {
+                if (viewMoreBtn) {
+                    viewMoreBtn.style.display = 'none';
+                }
+            }
+
+        } catch (err) {
+            console.error('Error loading calendar events:', err);
+        }
+    }
+
     // Execute initializations
     initSupabaseGallery();
+    initGoogleCalendar();
 });
