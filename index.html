@@ -351,22 +351,26 @@
                 <h3 class="reveal section-subheader">Upcoming Meetings, Dinners &amp; Community Gatherings</h3>
 
                 <div id="dynamic-events-container">
+                    <!-- Clean State: No events scheduled -->
+                    <div style="text-align: center; padding: 4rem 0; width: 100%;">
+                        <i class="fas fa-calendar-times" style="font-size: 3.5rem; color: rgba(212, 175, 55, 0.25); margin-bottom: 1.5rem; display: block;"></i>
+                        <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">No upcoming events scheduled at this time. Check back soon!</p>
+                    </div>
+
+                    <!-- Template Design for Featured Event (Uncomment and edit to use):
                     <div class="event-featured reveal">
                         <div class="event-image">
                             <div class="image-placeholder">
-                                <i class="fas fa-calendar-alt"></i>
+                                <i class="fas fa-gavel"></i>
                             </div>
                         </div>
                         <div class="event-details">
-                            <h3>[Event Name]</h3>
+                            <h3>Stated Communication</h3>
                             <p class="event-meta">
-                                <span><i class="fas fa-clock"></i> [Day], [Time]</span>
-                                <span><i class="fas fa-map-marker-alt"></i> [Location]</span>
+                                <span><i class="fas fa-clock"></i> Every 2nd Saturday at 3:00 PM</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Lodge Fellowship Hall</span>
                             </p>
-                            <p class="event-description">[Event description goes here. Provide a brief summary of the
-                                event,
-                                who is invited, what to expect, and any details attendees should know before arriving.]
-                            </p>
+                            <p class="event-description">Join us for our monthly stated business meeting. Fellowship dinner starts at 1:30 PM prior to lodge opening. All visiting brothers are cordially invited to attend.</p>
                             <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
                                 <a href="#contact" class="btn-primary">RSVP Now</a>
                                 <button class="btn-secondary" id="open-share-modal"><i class="fas fa-share-alt"
@@ -374,6 +378,7 @@
                             </div>
                         </div>
                     </div>
+                    -->
                 </div>
 
                 <div class="past-events-container extra-event" style="display: none;">
@@ -381,17 +386,18 @@
                         style="text-align: center; margin-top: 4rem; margin-bottom: 2rem; color: var(--color-primary); font-size: 1.8rem;">
                         Past Events</h4>
                     <div class="events-grid">
+                        <!-- Template Design for Past Events (Uncomment and edit to use):
                         <div class="event-featured small-event reveal">
                             <div class="event-image">
                                 <div class="image-placeholder"><i class="fas fa-utensils"></i></div>
                             </div>
                             <div class="event-details">
-                                <h3>[Past Event Name]</h3>
+                                <h3>Foundational Brotherhood Dinner</h3>
                                 <p class="event-meta">
-                                    <span><i class="fas fa-clock"></i> [Date &amp; Time]</span>
-                                    <span><i class="fas fa-map-marker-alt"></i> [Location]</span>
+                                    <span><i class="fas fa-clock"></i> December 13, 2025</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> Fellowship Hall</span>
                                 </p>
-                                <p class="event-description">[Brief recap of this past event and how it went.]</p>
+                                <p class="event-description">A dinner gathering dedicated to our foundational brothers and establishing our lodge goals.</p>
                             </div>
                         </div>
                         <div class="event-featured small-event reveal delay-1">
@@ -399,23 +405,23 @@
                                 <div class="image-placeholder"><i class="fas fa-users"></i></div>
                             </div>
                             <div class="event-details">
-                                <h3>[Past Event Name]</h3>
+                                <h3>Winter Community Service Drive</h3>
                                 <p class="event-meta">
-                                    <span><i class="fas fa-clock"></i> [Date &amp; Time]</span>
-                                    <span><i class="fas fa-map-marker-alt"></i> [Location]</span>
+                                    <span><i class="fas fa-clock"></i> January 10, 2026</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> Local Community Center</span>
                                 </p>
-                                <p class="event-description">[Brief recap of this past event and how it went.]</p>
+                                <p class="event-description">Brethren gathered to collect and package winter supplies for local community support.</p>
                             </div>
                         </div>
+                        -->
                     </div>
                 </div>
 
                 <div class="reveal delay-3"
                     style="text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                     <a href="#" id="open-notify-modal" class="btn-primary"><i class="fas fa-bell"
-                            style="margin-right: 8px;"></i>Get
-                        Notified</a>
-                    <button id="view-more-events" class="btn-secondary">View More</button>
+                            style="margin-right: 8px;"></i>Get Notified</a>
+                    <button id="view-more-events" class="btn-secondary" style="display: none;">View More</button>
                 </div>
             </div>
         </section>
