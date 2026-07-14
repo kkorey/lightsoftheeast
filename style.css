@@ -749,6 +749,13 @@ nav.scrolled {
     .gallery-section .container {
         padding: 0 0.5rem;
     }
+    .lightbox-modal {
+        padding: 85px 1rem 1rem 1rem;
+    }
+    .lightbox-close {
+        top: 85px;
+        right: 1.5rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -760,6 +767,13 @@ nav.scrolled {
     #gallery .container,
     .gallery-section .container {
         padding: 0 0.25rem;
+    }
+    .lightbox-modal {
+        padding: 85px 0.5rem 0.5rem 0.5rem;
+    }
+    .lightbox-close {
+        top: 85px;
+        right: 1rem;
     }
 }
 
@@ -956,6 +970,8 @@ input[type="checkbox"] {
     transition: opacity 0.3s ease;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
+    padding: 110px 2rem 2rem 2rem;
 }
 
 .lightbox-modal.show {
@@ -964,8 +980,8 @@ input[type="checkbox"] {
 }
 
 .lightbox-content {
-    max-width: 90%;
-    max-height: 85%;
+    max-width: 100%;
+    max-height: 100%;
     border: 2px solid var(--color-primary);
     border-radius: 8px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.3);
@@ -980,18 +996,27 @@ input[type="checkbox"] {
 
 .lightbox-close {
     position: absolute;
-    top: 2rem;
+    top: 110px;
     right: 2rem;
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--color-primary);
+    background-color: rgba(11, 20, 31, 0.8);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(212, 175, 55, 0.3);
     cursor: pointer;
     transition: var(--transition-standard);
-    z-index: 3001;
+    z-index: 3010;
 }
 
 .lightbox-close:hover {
-    color: var(--color-primary-hover);
-    transform: scale(1.1);
+    color: var(--color-bg);
+    background-color: var(--color-primary);
+    transform: scale(1.05);
 }
 
 /* Footer */
