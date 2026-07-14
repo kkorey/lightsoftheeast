@@ -600,6 +600,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Lightbox modal setup
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    if (lightboxModal && lightboxImg) {
+        const galleryGrid = document.getElementById('dynamic-gallery-grid');
+        if (galleryGrid) {
+            galleryGrid.addEventListener('click', (e) => {
+                if (e.target && e.target.classList.contains('gallery-img')) {
+                    lightboxImg.src = e.target.src;
+                    lightboxImg.alt = e.target.alt;
+                    lightboxModal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        }
+
+        if (lightboxClose) {
+            lightboxClose.addEventListener('click', () => {
+                lightboxModal.classList.remove('show');
+                document.body.style.overflow = '';
+            });
+        }
+
+        lightboxModal.addEventListener('click', (e) => {
+            if (e.target === lightboxModal) {
+                lightboxModal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightboxModal.classList.contains('show')) {
+                lightboxModal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+
     // Execute initializations
     initSupabaseGallery();
     initGoogleCalendar();
