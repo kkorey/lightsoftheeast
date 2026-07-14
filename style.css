@@ -833,7 +833,7 @@ nav.scrolled {
 }
 
 .contact-form {
-    background-color: var(--color-bg);
+    background-color: var(--color-bg-light);
     padding: 2.5rem;
     border-radius: 8px;
     border: 1px solid rgba(212, 175, 55, 0.1);
@@ -1071,8 +1071,10 @@ footer {
         height: 100vh;
         background-color: rgba(11, 20, 31, 0.98);
         flex-direction: column;
-        justify-content: center;
-        gap: 1rem;
+        justify-content: flex-start;
+        padding: 6rem 2rem 3rem 2rem;
+        gap: 1.2rem;
+        overflow-y: auto;
         transition: var(--transition-standard);
     }
 
@@ -1164,4 +1166,99 @@ footer {
 
 .back-link:hover {
     color: var(--color-primary);
+}
+
+/* Floating Contact Button */
+.floating-contact-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+    color: var(--color-bg) !important;
+    padding: 0.8rem 1.6rem;
+    border-radius: 50px;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4), 0 0 10px rgba(212, 175, 55, 0.2);
+    border: 2px solid transparent;
+    transition: var(--transition-standard);
+    white-space: nowrap;
+}
+
+.floating-contact-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.6), 0 0 20px rgba(212, 175, 55, 0.4);
+    background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-primary) 100%);
+}
+
+.floating-contact-btn i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.floating-contact-btn:hover i {
+    transform: rotate(-10deg) scale(1.1);
+}
+
+@media (max-width: 576px) {
+    .floating-contact-btn span {
+        display: none;
+    }
+    .floating-contact-btn {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        padding: 0;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+    }
+    .floating-contact-btn i {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+}
+
+/* Who We Seek Section Styles */
+.seek-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 2rem 0;
+}
+
+.seek-list li {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    line-height: 1.6;
+}
+
+.seek-list li i {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.seek-outro {
+    font-size: 1.25rem !important;
+    font-style: italic;
+    color: var(--color-primary) !important;
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    letter-spacing: 0.5px;
 }
